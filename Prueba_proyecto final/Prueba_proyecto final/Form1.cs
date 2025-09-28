@@ -16,5 +16,10 @@ namespace Prueba_proyecto_final
         {
             InitializeComponent();
         }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
