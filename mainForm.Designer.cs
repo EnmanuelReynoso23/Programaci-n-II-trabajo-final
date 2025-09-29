@@ -94,6 +94,8 @@
             DGV.RowHeadersWidth = 102;
             DGV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             DGV.Size = new Size(805, 180);
+            // Permitir que el DataGridView se expanda con la ventana
+            DGV.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             DGV.TabIndex = 0;
             DGV.CellContentClick += DGV_CellContentClick;
             // 
@@ -203,6 +205,8 @@
             btnEliminar.TabIndex = 6;
             btnEliminar.Text = "Eliminar";
             btnEliminar.UseVisualStyleBackColor = false;
+            // Mantener anclado abajo a la derecha
+            btnEliminar.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnEliminar.Click += btnEliminar_Click;
             // 
             // btnLimpiar
@@ -215,6 +219,8 @@
             btnLimpiar.TabIndex = 7;
             btnLimpiar.Text = "Limpiar";
             btnLimpiar.UseVisualStyleBackColor = false;
+            // Mantener anclado abajo a la derecha
+            btnLimpiar.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnLimpiar.Click += btnLimpiar_Click;
             // 
             // btnCrear
@@ -227,6 +233,8 @@
             btnCrear.TabIndex = 8;
             btnCrear.Text = "Crear";
             btnCrear.UseVisualStyleBackColor = false;
+            // Anclar arriba a la derecha para mantener posición relativa
+            btnCrear.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnCrear.Click += btnCrear_Click;
             // 
             // btnActualizar
@@ -239,6 +247,7 @@
             btnActualizar.TabIndex = 9;
             btnActualizar.Text = "Actualizar";
             btnActualizar.UseVisualStyleBackColor = false;
+            btnActualizar.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnActualizar.Click += btnActualizar_Click;
             // 
             // TxtPrecio
@@ -247,6 +256,8 @@
             TxtPrecio.Margin = new Padding(1, 1, 1, 1);
             TxtPrecio.Name = "TxtPrecio";
             TxtPrecio.Size = new Size(205, 23);
+            // permitir estiramiento horizontal
+            TxtPrecio.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             TxtPrecio.TabIndex = 16;
             TxtPrecio.TextChanged += TxtPrecio_TextChanged;
             // 
@@ -277,6 +288,7 @@
             txtID.Name = "txtID";
             txtID.ReadOnly = true;
             txtID.Size = new Size(205, 23);
+            txtID.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             txtID.TabIndex = 11;
             txtID.TextChanged += TxtID_TextChanged;
             // 
@@ -286,6 +298,7 @@
             TxtNombre.Margin = new Padding(1, 1, 1, 1);
             TxtNombre.Name = "TxtNombre";
             TxtNombre.Size = new Size(205, 23);
+            TxtNombre.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             TxtNombre.TabIndex = 12;
             TxtNombre.TextChanged += TxtNombre_TextChanged;
             // 
@@ -295,6 +308,7 @@
             TxtStock.Margin = new Padding(1, 1, 1, 1);
             TxtStock.Name = "TxtStock";
             TxtStock.Size = new Size(205, 23);
+            TxtStock.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             TxtStock.TabIndex = 17;
             TxtStock.TextChanged += TxtStock_TextChanged;
             // 
