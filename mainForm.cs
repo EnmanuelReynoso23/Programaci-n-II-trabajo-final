@@ -61,8 +61,8 @@ namespace Proyecto
             }
         }
 
-        // Maneja F11 para alternar y Esc para salir de pantalla completa
-        private void mainForm_KeyDown(object sender, KeyEventArgs e)
+    // Maneja F11 para alternar y Esc para salir de pantalla completa
+    private void mainForm_KeyDown(object? sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.F11)
             {
@@ -77,7 +77,7 @@ namespace Proyecto
         }
         // Evento: se ejecuta cuando cambia el texto del campo ID.
         // Valida que el ID sea numérico y muestra un mensaje en la barra de estado (SSLEstado).
-        private void TxtID_TextChanged(object sender, EventArgs e)
+    private void TxtID_TextChanged(object? sender, EventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(txtID.Text) && !int.TryParse(txtID.Text, out _))
                 SSLEstado.Text = "ID inválido, debe ser numérico";
@@ -87,14 +87,14 @@ namespace Proyecto
 
         // Evento: se ejecuta cuando cambia el texto del campo Nombre.
         // Indica si el nombre está vacío (campo obligatorio).
-        private void TxtNombre_TextChanged(object sender, EventArgs e)
+    private void TxtNombre_TextChanged(object? sender, EventArgs e)
         {
             SSLEstado.Text = string.IsNullOrWhiteSpace(TxtNombre.Text) ? "El nombre es obligatorio" : "";
         }
 
         // Evento: se ejecuta cuando cambia el texto del campo Precio.
         // Valida que el precio sea un decimal > 0 y actualiza la barra de estado.
-        private void TxtPrecio_TextChanged(object sender, EventArgs e)
+    private void TxtPrecio_TextChanged(object? sender, EventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(TxtPrecio.Text))
             {
@@ -108,7 +108,7 @@ namespace Proyecto
 
         // Evento: se ejecuta cuando cambia el texto del campo Stock.
         // Valida que sea un entero mayor o igual a 0.
-        private void TxtStock_TextChanged(object sender, EventArgs e)
+    private void TxtStock_TextChanged(object? sender, EventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(TxtStock.Text))
             {
@@ -122,7 +122,7 @@ namespace Proyecto
 
         // Botón Crear: crea una nueva fila en el DataGridView después de validar campos.
         // Se muestran mensajes emergentes (MessageBox) en caso de error de validación.
-        private void btnCrear_Click(object sender, EventArgs e)
+    private void btnCrear_Click(object? sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(TxtNombre.Text))
             {
@@ -147,7 +147,7 @@ namespace Proyecto
 
         // Botón Actualizar: actualiza la fila actualmente seleccionada en el DGV.
         // Valida los mismos campos que crear y sobrescribe los valores de las celdas.
-        private void btnActualizar_Click(object sender, EventArgs e)
+    private void btnActualizar_Click(object? sender, EventArgs e)
         {
             if (DGV.CurrentRow == null || DGV.CurrentRow.IsNewRow)
             {
@@ -182,7 +182,7 @@ namespace Proyecto
 
         // Evento: cuando se hace click en una celda del DGV, carga los valores en los campos del formulario
         // para poder editar o visualizar el registro.
-        private void DGV_CellContentClick(object sender, DataGridViewCellEventArgs e)
+    private void DGV_CellContentClick(object? sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
             var row = DGV.Rows[e.RowIndex];
@@ -196,7 +196,7 @@ namespace Proyecto
         }
 
         // Botón Eliminar: elimina la fila actualmente seleccionada si existe.
-        private void btnEliminar_Click(object sender, EventArgs e)
+    private void btnEliminar_Click(object? sender, EventArgs e)
         {
             if (DGV.CurrentRow != null)
             {
@@ -206,7 +206,7 @@ namespace Proyecto
         }
 
         // Botón Limpiar: limpia los campos del formulario y deselecciona filas en el DGV.
-        private void btnLimpiar_Click(object sender, EventArgs e)
+    private void btnLimpiar_Click(object? sender, EventArgs e)
         {
             txtID.Clear();
             TxtNombre.Clear();
@@ -217,7 +217,7 @@ namespace Proyecto
         }
 
         // Menú: Nuevo - reinicia los campos y pone el foco en Nombre.
-        private void nuevoToolStripMenuItem_Click(object sender, EventArgs e)
+    private void nuevoToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             txtID.Clear(); TxtNombre.Clear(); TxtPrecio.Clear(); TxtStock.Clear();
             SSLEstado.Text = "Nuevo registro";
@@ -226,24 +226,24 @@ namespace Proyecto
         }
 
         // Menú: Guarda/Crear mapea al botón Actualizar (se reutiliza la lógica existente).
-        private void guardarCrearToolStripMenuItem_Click(object sender, EventArgs e)
+    private void guardarCrearToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             btnActualizar.PerformClick();
         }
 
-        private void actualizarToolStripMenuItem_Click(object sender, EventArgs e)
+    private void actualizarToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             btnActualizar.PerformClick();
         }
 
-        private void eliminarToolStripMenuItem_Click(object sender, EventArgs e)
+    private void eliminarToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             btnEliminar.PerformClick();
         }
 
         // Menú: Importar CSV - abre un dialogo para seleccionar un archivo CSV y agrega cada línea como fila.
         // NOTA: No hace parsing avanzado ni manejo de comillas/escape; asume columnas separadas por comas.
-        private void importarCSVToolStripMenuItem_Click(object sender, EventArgs e)
+    private void importarCSVToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             using (OpenFileDialog ofd = new OpenFileDialog())
             {
@@ -262,7 +262,7 @@ namespace Proyecto
 
         // Menú: Exportar CSV - escribe cada fila del DGV en un archivo CSV seleccionado.
         // Omite la fila nueva que el DataGridView tiene por defecto.
-        private void exportarCSVToolStripMenuItem_Click(object sender, EventArgs e)
+    private void exportarCSVToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             using (SaveFileDialog sfd = new SaveFileDialog())
             {
@@ -286,7 +286,7 @@ namespace Proyecto
         }
 
         // Menú: Imprimir listado - muestra un diálogo de impresión. La impresión real no está implementada.
-        private void imprimirListadoToolStripMenuItem_Click(object sender, EventArgs e)
+    private void imprimirListadoToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             PrintDialog pd = new PrintDialog();
             if (pd.ShowDialog() == DialogResult.OK)
@@ -297,21 +297,21 @@ namespace Proyecto
         }
 
         // Menú: Salir - deshabilita el elemento y cierra la aplicación.
-        private void salirToolStripMenuItem_Click(object sender, EventArgs e)
+    private void salirToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             salirToolStripMenuItem.Enabled = false;
             Application.Exit();
         }
 
         // Copiar el valor de la celda actual al portapapeles.
-        private void copiarCeldaToolStripMenuItem_Click(object sender, EventArgs e)
+    private void copiarCeldaToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             if (DGV.CurrentCell != null)
                 Clipboard.SetText(DGV.CurrentCell.Value?.ToString() ?? "");
         }
 
         // Copiar la fila actual como una línea CSV al portapapeles.
-        private void copiarFilaComoCSVToolStripMenuItem_Click(object sender, EventArgs e)
+    private void copiarFilaComoCSVToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             if (DGV.CurrentRow != null)
             {
@@ -322,20 +322,20 @@ namespace Proyecto
         }
 
         // Limpia la selección del DataGridView.
-        private void limpiarSelecciónToolStripMenuItem_Click(object sender, EventArgs e)
+    private void limpiarSelecciónToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             DGV.ClearSelection();
         }
 
         // Refresca la vista del DataGridView.
-        private void refrescarToolStripMenuItem_Click(object sender, EventArgs e)
+    private void refrescarToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             DGV.Refresh();
             SSLEstado.Text = "Vista actualizada";
         }
 
         // Filtro: muestra solo las filas cuyo stock sea > 0.
-        private void soloConStockToolStripMenuItem_Click(object sender, EventArgs e)
+    private void soloConStockToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             foreach (DataGridViewRow row in DGV.Rows)
             {
@@ -349,7 +349,7 @@ namespace Proyecto
         }
 
         // Permite editar el registro seleccionado cargando sus datos en los controles del formulario.
-        private void editarSeleccionadoToolStripMenuItem_Click(object sender, EventArgs e)
+    private void editarSeleccionadoToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             if (DGV.CurrentRow != null)
             {
@@ -362,7 +362,7 @@ namespace Proyecto
         }
 
         // Duplicar fila: copia los valores de la fila seleccionada y añade una nueva fila con esos datos.
-        private void duplicarSeleccionadoToolStripMenuItem_Click(object sender, EventArgs e)
+    private void duplicarSeleccionadoToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             if (DGV.CurrentRow != null)
             {
@@ -372,7 +372,7 @@ namespace Proyecto
             }
         }
 
-        private void mainForm_Load(object sender, EventArgs e)
+    private void mainForm_Load(object? sender, EventArgs e)
         {
             // Aquí puede inicializar datos al cargar el formulario, si es necesario.
         }
