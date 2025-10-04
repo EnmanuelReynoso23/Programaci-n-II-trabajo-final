@@ -227,11 +227,27 @@ namespace Proyecto
         // Botón Eliminar: elimina la fila actualmente seleccionada si existe.
         private void BtnEliminar_Click(object? sender, EventArgs e)
         {
-            if (DGV.CurrentRow != null)
+
+            if (DGV.CurrentRow == null || DGV.CurrentRow.IsNewRow) {
+                MessageBox.Show("Seleccione un producto para eliminar.", "Advertencia",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            using (confirmaciónEliminación confirmDialog = new confirmaciónEliminación()) {
+                if (confirmDialog.ShowDialog() == DialogResult.OK && confirmDialog.Confirmado) {
+                    DGV.Rows.Remove(DGV.CurrentRow);
+                    SSLEstado.Text = "Producto eliminado";
+                } else {
+                    SSLEstado.Text = "Eliminación cancelada";
+                }
+            }
+
+            /*if (DGV.CurrentRow != null)
             {
                 DGV.Rows.Remove(DGV.CurrentRow);
                 SSLEstado.Text = "Producto eliminado";
-            }
+            }*/
         }
 
         // Botón Limpiar: limpia los campos del formulario y deselecciona filas en el DGV.
