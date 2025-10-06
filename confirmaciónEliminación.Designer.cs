@@ -36,19 +36,20 @@
             // labelConfirmacion
             // 
             labelConfirmacion.AutoSize = true;
-            labelConfirmacion.Font = new Font("Segoe UI", 14F);
-            labelConfirmacion.Location = new Point(12, 50);
+            labelConfirmacion.Font = new Font("Segoe UI", 13.2000008F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            labelConfirmacion.Location = new Point(11, 61);
             labelConfirmacion.Name = "labelConfirmacion";
-            labelConfirmacion.Size = new Size(372, 25);
+            labelConfirmacion.Size = new Size(449, 31);
             labelConfirmacion.TabIndex = 0;
             labelConfirmacion.Text = "¿Seguro que deseas eliminar este registro?";
             labelConfirmacion.Click += label1_Click;
             // 
             // buttonConfirmar
             // 
-            buttonConfirmar.Location = new Point(12, 133);
+            buttonConfirmar.Location = new Point(14, 177);
+            buttonConfirmar.Margin = new Padding(3, 4, 3, 4);
             buttonConfirmar.Name = "buttonConfirmar";
-            buttonConfirmar.Size = new Size(186, 62);
+            buttonConfirmar.Size = new Size(213, 83);
             buttonConfirmar.TabIndex = 1;
             buttonConfirmar.Text = "Confirmar";
             buttonConfirmar.UseVisualStyleBackColor = true;
@@ -56,9 +57,10 @@
             // 
             // buttonCancelar
             // 
-            buttonCancelar.Location = new Point(223, 133);
+            buttonCancelar.Location = new Point(255, 177);
+            buttonCancelar.Margin = new Padding(3, 4, 3, 4);
             buttonCancelar.Name = "buttonCancelar";
-            buttonCancelar.Size = new Size(161, 62);
+            buttonCancelar.Size = new Size(184, 83);
             buttonCancelar.TabIndex = 2;
             buttonCancelar.Text = "Cancelar";
             buttonCancelar.UseVisualStyleBackColor = true;
@@ -66,12 +68,13 @@
             // 
             // confirmaciónEliminación
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(404, 304);
+            ClientSize = new Size(469, 405);
             Controls.Add(buttonCancelar);
             Controls.Add(buttonConfirmar);
             Controls.Add(labelConfirmacion);
+            Margin = new Padding(3, 4, 3, 4);
             Name = "confirmaciónEliminación";
             Text = "confirmaciónEliminación";
             Load += confirmaciónEliminación_Load;

@@ -9,7 +9,14 @@ namespace Proyecto.base_de_datos
 
         public Conexion()
         {
-            conexionString = "Host=localhost;Port=5432;Username=postgres;Password=22022006;Database=";
+            conexionString = "Host=db.pztlyjvnukuikgxnkgxo.supabase.co;" +
+                "Username=postgres;" +
+                "Password=o25rx0LEoO57IhDm;" +
+                "Database=postgres;" +
+                "Port=5432;" +
+                "Pooling=true;" +
+                "SSL Mode=Require;" +
+                "Trust Server Certificate=true";
         }
 
         public NpgsqlConnection GetConnection() 

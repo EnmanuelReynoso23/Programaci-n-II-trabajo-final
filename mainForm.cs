@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using System.Drawing.Printing;
 using System.Globalization;
+using Proyecto.base_de_datos;
 
 namespace Proyecto
 {
@@ -13,6 +14,7 @@ namespace Proyecto
         private bool isFullScreen = false;
         private FormBorderStyle prevBorderStyle;
         private Rectangle prevBounds;
+        private ProductoDAO productoDAO = new ProductoDAO();
 
         public mainForm()
         {
@@ -21,8 +23,63 @@ namespace Proyecto
             //capturar teclas a nivel de formulario
             this.KeyPreview = true;
             this.KeyDown += MainForm_KeyDown;
+            this.Load += MainForm_Cargar;
         }
 
+        private void MainForm_Cargar(object? sender, EventArgs e)
+        {
+            CargarDatosBD();
+            ActualizarConteo();
+        }
+
+        private void CargarDatosBD()
+        {
+            try
+            {
+                DataTable dt = productoDAO.ObtenerProductos();
+                DGV.Rows.Clear();
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    DateTime fecha = Convert.ToDateTime(row["fecha_registro"]);
+                    String fechaFormateada = fecha.ToString("dd/MM/yyyy");
+
+                    DGV.Rows.Add(
+                        row["id_producto"].ToString(),
+                        row["nombre"].ToString(),
+                        Convert.ToDecimal(row["precio"]).ToString("0.##"),
+                        Convert.ToInt32(row["stock"]).ToString(),
+                        fechaFormateada
+                    );
+                }
+                SSLEstado.Text = "Datos cargados desde la base de datos";
+                ActualizarConteo();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar los datos: " + ex.Message);
+                SSLEstado.Text = "Error al cargar datos";
+            }
+        }
+
+        private void ActualizarConteo()
+        {
+            try
+            {
+                int count = productoDAO.ObtenerConteoProductos();
+                SSLConteo.Text = $"{count} registros en BD";
+            }
+            catch
+            {
+                // Si falla, contar del DGV
+                int count = 0;
+                foreach (DataGridViewRow r in DGV.Rows)
+                {
+                    if (!r.IsNewRow && r.Visible) count++;
+                }
+                SSLConteo.Text = $"{count} registros";
+            }
+        }
 
         // Para alternar entre pantalla completa y ventana pequeña
 
@@ -163,10 +220,35 @@ namespace Proyecto
             }
 
             txtID.Text = idToUse.ToString();
+            string fechaFormateada = DTP.Value.ToString("dd/MM/yyyy");
 
-            // Agrega la nueva fila; se formatea el precio y el stock antes de añadir.
-            DGV.Rows.Add(txtID.Text, TxtNombre.Text.Trim(), precio.ToString("0.##"), stock.ToString(), DTP.Value.ToString("dd/MM/yyyy"));
-            SSLEstado.Text = "Producto creado";
+            //Guardar información en BD
+            try
+            {
+                bool insertado = productoDAO.AgregarProducto(
+                    int.Parse(txtID.Text),
+                    TxtNombre.Text.Trim(),
+                    precio,
+                    stock,
+                    fechaFormateada
+                    );
+                // Agrega la nueva fila; se formatea el precio y el stock antes de añadir.
+                if (insertado)
+                {
+                    DGV.Rows.Add(txtID.Text, TxtNombre.Text.Trim(),
+                        precio.ToString("0.##"), stock.ToString(),
+                        fechaFormateada);
+                    SSLEstado.Text = "Producto creado";
+                    ActualizarConteo();
+                    BtnLimpiar_Click(null, EventArgs.Empty);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al crear producto: " + ex.Message, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            
         }
 
         // Botón Actualizar: actualiza la fila actualmente seleccionada en el DGV.
@@ -195,14 +277,39 @@ namespace Proyecto
                 return;
             }
 
-            // Actualiza las celdas de la fila seleccionada.
-            DGV.CurrentRow.Cells[0].Value = txtID.Text;
-            DGV.CurrentRow.Cells[1].Value = TxtNombre.Text.Trim();
-            DGV.CurrentRow.Cells[2].Value = precio.ToString("0.##");
-            DGV.CurrentRow.Cells[3].Value = stock.ToString();
-            DGV.CurrentRow.Cells[4].Value = DTP.Value.ToString("dd/MM/yyyy");
+            string fechaFormateada = DTP.Value.ToString("dd/MM/yyyy");
 
-            SSLEstado.Text = "Producto actualizado";
+
+            // Actualizar base de datos
+            try 
+            {
+                bool actualizado = productoDAO.ActualizarProducto(
+                    int.Parse(txtID.Text),
+                    TxtNombre.Text.Trim(),
+                    precio,
+                    stock,
+                    fechaFormateada
+                    );
+                if (actualizado)
+                {
+                    DGV.CurrentRow.Cells[0].Value = int.Parse(txtID.Text);
+                    DGV.CurrentRow.Cells[1].Value = TxtNombre.Text.Trim();
+                    DGV.CurrentRow.Cells[2].Value = precio.ToString("0.##");
+                    DGV.CurrentRow.Cells[3].Value = stock.ToString();
+                    DGV.CurrentRow.Cells[4].Value = DTP.Value.ToString("dd/MM/yyyy");
+
+                    SSLEstado.Text = "Producto actualizado";
+                } else 
+                {
+                    MessageBox.Show("No se encontró producto a actualizar.", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al actualizar producto: " + ex.Message, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         // Evento: cuando se hace click en una celda del DGV, carga los valores en los campos del formulario
@@ -227,27 +334,57 @@ namespace Proyecto
         // Botón Eliminar: elimina la fila actualmente seleccionada si existe.
         private void BtnEliminar_Click(object? sender, EventArgs e)
         {
-
-            if (DGV.CurrentRow == null || DGV.CurrentRow.IsNewRow) {
+            if (DGV.CurrentRow == null || DGV.CurrentRow.IsNewRow)
+            {
                 MessageBox.Show("Seleccione un producto para eliminar.", "Advertencia",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            using (confirmaciónEliminación confirmDialog = new confirmaciónEliminación()) {
-                if (confirmDialog.ShowDialog() == DialogResult.OK && confirmDialog.Confirmado) {
-                    DGV.Rows.Remove(DGV.CurrentRow);
-                    SSLEstado.Text = "Producto eliminado";
-                } else {
+            using (confirmaciónEliminación confirmDialog = new confirmaciónEliminación())
+            {
+                if (confirmDialog.ShowDialog() == DialogResult.OK && confirmDialog.Confirmado)
+                {
+                    try
+                    {
+                        string idTexto = DGV.CurrentRow.Cells[0].Value?.ToString() ?? "";
+
+                        // Validar que el ID sea un número válido
+                        if (!int.TryParse(idTexto, out int idProducto))
+                        {
+                            MessageBox.Show("ID de producto inválido.", "Error",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+
+                        // Eliminar de la base de datos
+                        bool eliminado = productoDAO.EliminarProducto(idProducto);
+
+                        if (eliminado)
+                        {
+                            // Si se eliminó correctamente de la BD, eliminar del DataGridView
+                            DGV.Rows.Remove(DGV.CurrentRow);
+                            SSLEstado.Text = "Producto eliminado";
+                            ActualizarConteo();
+                        }
+                        else
+                        {
+                            MessageBox.Show("No se encontró producto a eliminar.", "Error",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error al eliminar producto: " + ex.Message, "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        SSLEstado.Text = "Error al eliminar";
+                    }
+                }
+                else
+                {
                     SSLEstado.Text = "Eliminación cancelada";
                 }
             }
-
-            /*if (DGV.CurrentRow != null)
-            {
-                DGV.Rows.Remove(DGV.CurrentRow);
-                SSLEstado.Text = "Producto eliminado";
-            }*/
         }
 
         // Botón Limpiar: limpia los campos del formulario y deselecciona filas en el DGV.
@@ -376,7 +513,7 @@ namespace Proyecto
         // Refresca la vista del DataGridView.
         private void RefrescarToolStripMenuItem_Click(object? sender, EventArgs e)
         {
-            DGV.Refresh();
+            CargarDatosBD();
             SSLEstado.Text = "Vista actualizada";
         }
 
@@ -454,6 +591,16 @@ namespace Proyecto
                 if (r.Visible) count++;
             }
             SSLConteo.Text = $"{count} registros";
+        }
+
+        private void lblID_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
