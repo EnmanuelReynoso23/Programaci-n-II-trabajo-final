@@ -411,7 +411,7 @@ namespace Proyecto
         // Menú: Guarda/Crear mapea al botón Actualizar (se reutiliza la lógica existente).
         private void GuardarCrearToolStripMenuItem_Click(object? sender, EventArgs e)
         {
-            btnActualizar.PerformClick();
+            btnCrear.PerformClick();
         }
 
         private void ActualizarToolStripMenuItem_Click(object? sender, EventArgs e)
